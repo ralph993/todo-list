@@ -1,8 +1,10 @@
 import "./style.css";
 import { useTodoContext } from "@/context";
 
-import { Paper, Stack, OutlinedInput, Typography, InputAdornment, IconButton } from "@mui/material";
+import { Paper, Stack, OutlinedInput, Typography, InputAdornment, IconButton, Box } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
+
+import no_data from "@/assets/no_data.svg";
 
 export default function AppContent() {
 	const { selected, setSelected } = useTodoContext();
@@ -71,9 +73,19 @@ export default function AppContent() {
 					)}
 				</Stack>
 			) : (
-				<Typography variant="overline" textAlign="center" width="100%" mt={4}>
-					Select or create a todo to view details
-				</Typography>
+				<Box
+					my={20}
+					width="100%"
+					display="flex"
+					flexDirection="column"
+					justifyContent="center"
+					alignItems="center"
+				>
+					<img width={150} src={no_data} alt="" />
+					<Typography variant="overline" textAlign="center" width="100%" mt={4}>
+						Select a todo to view details
+					</Typography>
+				</Box>
 			)}
 		</Paper>
 	);
