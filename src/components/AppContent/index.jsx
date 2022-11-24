@@ -72,7 +72,7 @@ export default function AppContent() {
 				</Stack>
 			) : (
 				<Typography variant="overline" textAlign="center" width="100%" mt={4}>
-					Select a todo to view details
+					Select or create a todo to view details
 				</Typography>
 			)}
 		</Paper>

@@ -1,7 +1,10 @@
 import "./style.css";
-import { Fragment, useState, useMemo } from "react";
+import { Fragment, useState, useMemo, useCallback } from "react";
 import clsx from "clsx";
 import { useTodoContext } from "@/context";
+import { useLongPress, LongPressDetectEvents } from "use-long-press";
+import { deleteTodos } from "@/api/todos";
+import { useQueryClient, useMutation } from "@tanstack/react-query";
 
 import {
 	Paper,
@@ -21,10 +24,13 @@ import {
 	Radio,
 	FormControlLabel,
 	RadioGroup,
+	Checkbox,
 } from "@mui/material";
 
 import CloseIcon from "@mui/icons-material/Close";
 import FilterListIcon from "@mui/icons-material/FilterList";
+import DoNotDisturbAltIcon from "@mui/icons-material/DoNotDisturbAlt";
+import DeleteIcon from "@mui/icons-material/Delete";
 
 function SidebarLoader() {
 	return Array.from({ length: 5 }).map((_, i) => (
@@ -43,10 +49,13 @@ function SidebarLoader() {
 }
 
 export default function AppSidebar() {
+	const { todos, isLoading, selected, setSelected } = useTodoContext();
+	const queryClient = useQueryClient();
 	const [search, setSearch] = useState("");
 	const [filter, setFilter] = useState("all");
-	const { todos, isLoading, selected, setSelected } = useTodoContext();
-
+	const [deletableMode, setDeletableMode] = useState(false);
+	const [deletableList, setDeletableList] = useState([]);
+	const { mutate: handleDeleteTodosApi } = useMutation((query) => deleteTodos(query));
 	const [anchorEl, setAnchorEl] = useState(null);
 	const openFilterMenu = Boolean(anchorEl);
 
@@ -62,6 +71,54 @@ export default function AppSidebar() {
 	const handleFilter = (value) => {
 		setFilter(value);
 		setAnchorEl(null);
+	};
+
+	const handleActiveErasableModel = useCallback(() => {
+		setDeletableMode(true);
+	}, []);
+
+	const bindHoldClick = useLongPress(handleActiveErasableModel, {
+		threshold: 500,
+		captureEvent: true,
+		cancelOnMovement: false,
+		detect: LongPressDetectEvents.BOTH,
+	});
+
+	const handleDeletableList = (_id) => {
+		if (deletableList.includes(_id)) {
+			setDeletableList(deletableList.filter((id) => id !== _id));
+		} else {
+			setDeletableList([...deletableList, _id]);
+		}
+	};
+
+	const handleDeleteTodos = () => {
+		handleDeleteTodosApi(
+			{
+				_id_in: deletableList,
+			},
+			{
+				onSuccess: () => {
+					let remaining = null;
+					queryClient.setQueryData(["get-todos"], (prev) => {
+						const filtered = prev.filter((todo) => !deletableList.includes(todo._id));
+						remaining = filtered?.[0];
+						return filtered;
+					});
+
+					setDeletableMode(false);
+					setDeletableList([]);
+
+					if (!remaining) {
+						setSelected(null);
+					}
+
+					setSelected(remaining);
+				},
+			}
+		);
+		// setDeletableMode(false);
+		// setDeletableList([]);
 	};
 
 	const searchFilter = useMemo(() => {
@@ -124,15 +181,30 @@ export default function AppSidebar() {
 								}
 								className="search-input"
 							/>
-							<IconButton
-								onClick={(e) => {
-									setAnchorEl(e.currentTarget);
-								}}
-								disabled={!todos?.length}
-								size="small"
-							>
-								<FilterListIcon />
-							</IconButton>
+
+							{deletableMode && !deletableList.length ? (
+								<IconButton
+									onClick={() => setDeletableMode(false)}
+									disabled={!todos?.length}
+									size="small"
+								>
+									<DoNotDisturbAltIcon />
+								</IconButton>
+							) : !!deletableList.length ? (
+								<IconButton onClick={handleDeleteTodos} disabled={!todos?.length} size="small">
+									<DeleteIcon />
+								</IconButton>
+							) : (
+								<IconButton
+									onClick={(e) => {
+										setAnchorEl(e.currentTarget);
+									}}
+									disabled={!todos?.length}
+									size="small"
+								>
+									<FilterListIcon />
+								</IconButton>
+							)}
 						</Stack>
 					}
 				>
@@ -141,7 +213,7 @@ export default function AppSidebar() {
 					) : !!visibilityFilter?.length ? (
 						visibilityFilter?.map((todo, i) => (
 							<Fragment key={i}>
-								<ListItem disableGutters alignItems="flex-start">
+								<ListItem {...bindHoldClick()} disableGutters alignItems="flex-start">
 									<ListItemButton
 										className={clsx({
 											"todo-completed": true,
@@ -150,6 +222,18 @@ export default function AppSidebar() {
 										onClick={() => handleSelection(todo)}
 										selected={todo._id === selected?._id}
 									>
+										{deletableMode && (
+											<Checkbox
+												onChange={() => handleDeletableList(todo._id)}
+												checked={deletableList.includes(todo._id)}
+												disableFocusRipple
+												disableRipple
+												disableTouchRipple
+												sx={{
+													paddingLeft: 0,
+												}}
+											/>
+										)}
 										<ListItemText
 											primary={todo.title}
 											secondary={todo.body}

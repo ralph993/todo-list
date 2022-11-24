@@ -90,3 +90,24 @@ export const deleteTodo = async (queryData) => {
 
 	return data?.data?.deleteOneTodo;
 };
+
+export const deleteTodos = async (queryData) => {
+	const query = gql`
+		mutation DeleteManyTodos($query: TodoQueryInput) {
+			deleteManyTodos(query: $query) {
+				deletedCount
+			}
+		}
+	`;
+
+	const variables = {
+		query: queryData,
+	};
+
+	const { data } = await graphQlInstance.post("/graphql", {
+		query,
+		variables,
+	});
+
+	return data?.data?.deleteManyTodos;
+};
