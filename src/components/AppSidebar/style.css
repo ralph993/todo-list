@@ -1,0 +1,22 @@
+.sidebar-wrapper.MuiPaper-root {
+	height: 100%;
+	overflow: hidden;
+}
+.sidebar-wrapper.MuiPaper-root .todo-completed.MuiButtonBase-root::before {
+	content: "";
+	position: absolute;
+	left: -7px;
+	top: 0;
+	width: 7px;
+	height: 100%;
+	border-radius: 10px;
+	background-color: #3fbd3f;
+	transition: left 0.2s ease-in-out;
+}
+.sidebar-wrapper.MuiPaper-root .todo-completed-in.MuiButtonBase-root::before {
+	left: -2px;
+}
+.sidebar-wrapper.MuiPaper-root .search-input.MuiInputBase-root {
+	height: 40px;
+	padding-right: 3px;
+}
