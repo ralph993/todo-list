@@ -1,8 +1,9 @@
 import "./style.css";
+import { useTodoContext } from "@/context";
 import { Fragment, useState, useMemo, useCallback } from "react";
 import clsx from "clsx";
-import { useTodoContext } from "@/context";
 import { useLongPress, LongPressDetectEvents } from "use-long-press";
+
 import { deleteTodos } from "@/api/todos";
 import { useQueryClient, useMutation } from "@tanstack/react-query";
 
@@ -55,9 +56,10 @@ export default function AppSidebar() {
 	const [filter, setFilter] = useState("all");
 	const [deletableMode, setDeletableMode] = useState(false);
 	const [deletableList, setDeletableList] = useState([]);
-	const { mutate: handleDeleteTodosApi } = useMutation((query) => deleteTodos(query));
 	const [anchorEl, setAnchorEl] = useState(null);
 	const openFilterMenu = Boolean(anchorEl);
+
+	const { mutate: handleDeleteTodosApi } = useMutation((query) => deleteTodos(query));
 
 	const handleSelection = (todo) => {
 		setSelected(todo);
@@ -117,8 +119,6 @@ export default function AppSidebar() {
 				},
 			}
 		);
-		// setDeletableMode(false);
-		// setDeletableList([]);
 	};
 
 	const searchFilter = useMemo(() => {

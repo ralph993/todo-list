@@ -157,7 +157,8 @@ export default function AppNavbar() {
 	};
 
 	const handleIsEditing = () => {
-		setSelected((prev) => ({ ...prev, isEditing: !prev.isEditing }));
+		const prevValue = queryClient.getQueryData(["get-todos"]).find((todo) => todo._id === selected._id);
+		setSelected((prev) => ({ ...prevValue, isEditing: !prev.isEditing }));
 	};
 
 	const handleDeleteTodo = () => {
@@ -237,12 +238,7 @@ export default function AppNavbar() {
 				</Box>
 			</Stack>
 
-			<Dialog
-				onClose={() => {
-					setOpenConfirm(false);
-				}}
-				open={openConfirm}
-			>
+			<Dialog onClose={() => setOpenConfirm(false)} open={openConfirm}>
 				<DialogTitle>Are you sure you want to delete this todo?</DialogTitle>
 				<DialogActions>
 					<Button onClick={handleDeleteTodo} color="error">
