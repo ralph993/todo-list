@@ -112,6 +112,7 @@ export default function AppSidebar() {
 								endAdornment={
 									<InputAdornment position="end">
 										<IconButton
+											disabled={!todos?.length}
 											onClick={() => {
 												setSearch("");
 											}}
