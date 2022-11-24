@@ -5,9 +5,11 @@ import AppNavbar from "@/components/AppNavbar";
 import AppSidebar from "@/components/AppSidebar";
 import AppContent from "@/components/AppContent";
 
+// API
 import { useQuery } from "@tanstack/react-query";
 import { getTodos } from "@/api/todos";
 
+// MUI
 import { Grid, Stack } from "@mui/material";
 
 export default function AppLayout({ children }) {

@@ -1,5 +1,12 @@
 import "./style.css";
+import { useTodoContext } from "@/context";
 import { useMemo, useState } from "react";
+
+// API
+import { useQueryClient, useMutation } from "@tanstack/react-query";
+import { updateTodo, addTodo, deleteTodo } from "@/api/todos";
+
+// MUI
 import {
 	Paper,
 	Stack,
@@ -14,10 +21,7 @@ import {
 	Button,
 } from "@mui/material";
 
-import { useTodoContext } from "@/context";
-import { useQueryClient, useMutation } from "@tanstack/react-query";
-import { updateTodo, addTodo, deleteTodo } from "@/api/todos";
-
+// Assets
 import CheckIcon from "@mui/icons-material/Check";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";

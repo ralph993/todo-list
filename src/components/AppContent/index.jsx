@@ -1,7 +1,11 @@
 import "./style.css";
 import { useTodoContext } from "@/context";
 
-import { Paper, Stack, OutlinedInput, Typography, InputAdornment, IconButton } from "@mui/material";
+// MUI
+import { Paper, Stack, OutlinedInput, Typography, InputAdornment, IconButton, Box } from "@mui/material";
+
+// Assets
+import no_data from "@/assets/no_data.svg";
 import CloseIcon from "@mui/icons-material/Close";
 
 export default function AppContent() {
@@ -25,6 +29,13 @@ export default function AppContent() {
 							<OutlinedInput
 								value={selected.title}
 								onChange={(e) => handleOnChange(e, "title")}
+								onClick={(e) => {
+									const value = e.target.value;
+
+									if (value === "New Todo") {
+										e.target.value = "";
+									}
+								}}
 								variant="outlined"
 								endAdornment={
 									<InputAdornment position="end">
@@ -40,6 +51,13 @@ export default function AppContent() {
 								placeholder="Body"
 								value={selected.body}
 								onChange={(e) => handleOnChange(e, "body")}
+								onClick={(e) => {
+									const value = e.target.value;
+
+									if (value?.match(/^[0-9]{2}:[0-9]{2} [AP]M - New Todo/)) {
+										e.target.value = "";
+									}
+								}}
 								sx={{
 									height: "100%",
 									whiteSpace: "pre-line",
@@ -71,9 +89,19 @@ export default function AppContent() {
 					)}
 				</Stack>
 			) : (
-				<Typography variant="overline" textAlign="center" width="100%" mt={4}>
-					Select or create a todo to view details
-				</Typography>
+				<Box
+					my={20}
+					width="100%"
+					display="flex"
+					flexDirection="column"
+					justifyContent="center"
+					alignItems="center"
+				>
+					<img width={150} src={no_data} alt="" />
+					<Typography variant="overline" textAlign="center" width="100%" mt={4}>
+						Select a todo to view details
+					</Typography>
+				</Box>
 			)}
 		</Paper>
 	);

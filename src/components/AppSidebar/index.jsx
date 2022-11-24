@@ -1,12 +1,14 @@
 import "./style.css";
+import clsx from "clsx";
 import { useTodoContext } from "@/context";
 import { Fragment, useState, useMemo, useCallback } from "react";
-import clsx from "clsx";
 import { useLongPress, LongPressDetectEvents } from "use-long-press";
 
+// API
 import { deleteTodos } from "@/api/todos";
 import { useQueryClient, useMutation } from "@tanstack/react-query";
 
+// MUI
 import {
 	Paper,
 	List,
@@ -28,6 +30,7 @@ import {
 	Checkbox,
 } from "@mui/material";
 
+// Assets
 import CloseIcon from "@mui/icons-material/Close";
 import FilterListIcon from "@mui/icons-material/FilterList";
 import DoNotDisturbAltIcon from "@mui/icons-material/DoNotDisturbAlt";
