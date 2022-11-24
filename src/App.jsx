@@ -1,18 +1,19 @@
 import { useMemo, useState } from "react";
+import { TodoProvider } from "@/context";
+
 import AppNavbar from "@/components/AppNavbar";
 import AppSidebar from "@/components/AppSidebar";
 import AppContent from "@/components/AppContent";
 
-import { Grid, Stack } from "@mui/material";
 import { useQuery } from "@tanstack/react-query";
-
-import { TodoProvider } from "@/context";
 import { getTodos } from "@/api/todos";
+
+import { Grid, Stack } from "@mui/material";
 
 export default function AppLayout({ children }) {
 	const [selected, setSelected] = useState(null);
 
-	const { data, isLoading } = useQuery(["get-todos"], async () => {
+	const { data: todos, isLoading } = useQuery(["get-todos"], async () => {
 		const res = await getTodos();
 
 		// sort todos by createdAt
@@ -23,12 +24,12 @@ export default function AppLayout({ children }) {
 
 	const values = useMemo(
 		() => ({
-			todos: data,
-			isLoading: isLoading,
-			selected: selected,
+			todos,
+			isLoading,
+			selected,
 			setSelected,
 		}),
-		[data, isLoading, selected]
+		[todos, isLoading, selected]
 	);
 
 	return (
