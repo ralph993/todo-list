@@ -3,7 +3,7 @@ import axios from "axios";
 export const gql = String.raw;
 export const app = new Realm.App({ id: "todo-lsit-cjrfh" });
 
-const realmUrl = "https://us-east-1.aws.realm.mongodb.com/api/client/v2.0/app/todo-lsit-cjrfh";
+const realmUrl = import.meta.env.VITE_MONGO_REALM_URL || process.env.VITE_MONGO_REALM_URL;
 const getValidAccessToken = async () => {
 	const currentUser = app?.currentUser;
 
