@@ -45,6 +45,7 @@ export const addTodo = async (queryData) => {
 		query,
 		variables,
 	});
+
 	return data?.data?.insertOneTodo;
 };
 
