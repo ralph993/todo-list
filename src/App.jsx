@@ -15,14 +15,7 @@ import { Grid, Stack } from "@mui/material";
 export default function AppLayout({ children }) {
 	const [selected, setSelected] = useState(null);
 
-	const { data: todos, isLoading } = useQuery(["get-todos"], async () => {
-		const res = await getTodos();
-
-		// sort todos by createdAt
-		return res.sort((a, b) => {
-			return new Date(b.createdAt) - new Date(a.createdAt);
-		});
-	});
+	const { data: todos, isLoading } = useQuery(["get-todos"], () => getTodos());
 
 	const values = useMemo(
 		() => ({

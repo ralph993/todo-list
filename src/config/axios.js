@@ -1,9 +1,13 @@
 import * as Realm from "realm-web";
 import axios from "axios";
+
 export const gql = String.raw;
-export const app = new Realm.App({ id: "todo-lsit-cjrfh" });
+export const app = new Realm.App({
+	id: import.meta.env.VITE_MONGO_REALM_APP_ID || process.env.VITE_MONGO_REALM_APP_ID,
+});
 
 const realmUrl = import.meta.env.VITE_MONGO_REALM_URL || process.env.VITE_MONGO_REALM_URL;
+
 const getValidAccessToken = async () => {
 	const currentUser = app?.currentUser;
 
