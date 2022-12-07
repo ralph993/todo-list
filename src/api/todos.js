@@ -1,6 +1,6 @@
 import { gql, graphQlInstance } from "@/config/axios";
 
-export const getTodos = async (queryData, sortBy, limit = 10) => {
+export const getTodos = async (queryData, sortBy = "CREATEDAT_DESC", limit = 100) => {
 	const query = gql`
 		query Todos($limit: Int, $sortBy: TodoSortByInput, $query: TodoQueryInput) {
 			todos(limit: $limit, sortBy: $sortBy, query: $query) {
