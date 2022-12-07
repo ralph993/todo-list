@@ -48,10 +48,8 @@ export default function AppNavbar() {
 	// this will be true if there is a todo with _id of 'new'
 	const stopCreationProcess = useMemo(() => todos?.some((todo) => todo?._id === "new"), [todos]);
 
-	console.log("selected", selected);
-
 	const handleAddTodo = () => {
-		// remove existing todo with _id of 'new'
+		// check if there is a todo with _id of 'new'
 		if (stopCreationProcess) {
 			// remove the new todo from cache
 			queryClient.setQueryData(["get-todos"], (prev) => {
@@ -61,7 +59,7 @@ export default function AppNavbar() {
 			// select the first todo in the list
 			setSelected(todos?.length > 0 ? todos[1] : null);
 		} else {
-			// add new todo with _id of 'new'
+			// add new default todo with _id of 'new'
 			const newTodo = {
 				_id: "new",
 				title: "New Todo",
